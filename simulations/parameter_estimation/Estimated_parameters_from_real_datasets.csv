@@ -1,0 +1,15 @@
+Parameter,Description,HCA BM,HCA CB,PBMC,APPPS1,hipsc,Kolod.,Darmanis,AML,Pollen,Zeisel
+,,10X,10X,10X,10X,10X,Full-length,Full-length,Full-length,Full-length,Full-length
+nCells,Number of cells,10k subset,10k subset,68224,22927,18379,623,16587,513,240,3005
+nGenes,Number of genes,9651,7234,3978,3958,14171,21529,466,19573,16414,8836
+mean.rate,Rate for gene expr. gamma distr.,16.316,11.24,15.22,3.49,3.225,0.0028,0.0229,0.0036,0.025,1.688
+mean.shape,Shape for gene expr. gamma distr,0.918,0.974,1.37,1.22,0.577,0.298,0.511,0.522,0.521,1.367
+lib.loc,Loc. for library size log-normal distr.,7.61,7.51,7.092,7.84,8.657,15.215,14.626,14.87,14.626,9.292
+lib.scale,Scale for library size log-normal distr,0.897,1.07,0.373,0.42,0.401,0.433,0.43,1.846,0.43,0.656
+out.prob,Probability that gene is outlier,0.047,0.046,0.076,0.067,0.025,0.0012,0.0051,0.0083,0.023,0.048
+out.facLoc,Loc. for expression outlier factor log-normal distr.,3.72,3.75,3.207,2.62,4.187,6.848,4.66,4.685,4.79,2.591
+out.facScale,Scale for expression outlier factor log-normal distr.,1.21,1.22,1.075,0.766,0.596,0.503,1.199,0.671,0.757,0.594
+bcv.common,Common BCV dispersion across all genes,0.318,0.302,0.318,0.173,0.367,1.222,4.02,5.88,1.598,0.39
+bcv.df,Degrees of freedom for BCV inverse chi-squared distribution,26.28,27.59,26.28,33.47,58.578,5.258,74.58,139.43,10.999,33.73
+dropout.mid,Midpoint for dropout logistic function,0.048,0.225,-0.234,-0.3,-0.176,2.893,2.893,2.893,2.379,0.151
+dropout.shape,Shape of dropout logistic function,-0.906,-0.93,-1.132,-1.21,-1.155,-0.756,-0.756,-0.756,-0.601,-0.975

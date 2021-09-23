@@ -1,0 +1,74 @@
+---
+title: "Parameter estimation from selected data sets"
+author: "Astrid Wachter and Jen Mollon"
+date: "27 December 2018"
+output: html_document
+---
+  
+```{r, echo=F, message = FALSE}
+library(SingleCellExperiment)
+library(Matrix)
+require(splatter)
+require(scater)
+require(ggplot2)
+require(gridExtra)
+require(ggpubr)
+require(Rtsne)
+```
+
+```{r}
+datasets = c("HCA_BM_sconeinput.RData", "HCA_CB_sconeinput.RData", 
+             "aml_sconeinput.RData", "APPPS1_sconeinput.RData", 
+             "darmanis_sconeinput.RData", "hipsc_sconeinput.RData", 
+             "kolodziejczyk_sconeinput.RData", "pbmc_sconeinput.RData",
+             "pollen_sconeinput.RData", "zeisel_sconeinput.RData")
+set.seed(190806)
+```
+
+```{r}
+for(k in 1: length(datasets))
+{
+  path     = "~/data/simulations/"
+  inPath   = "~/scone_input_sce/"
+  outpath  = paste0(path,"parameterEstimation/")
+  load(file = paste(inPath, datasets[k], sep = ""))
+  
+  if(datasets[k] == "HCA_BM_sconeinput.RData" | datasets[k] == "HCA_CB_sconeinput.RData")
+  { set.seed(190806)
+    sce <- sce[ ,sample(dim(assay(sce))[2], 10000)]
+    save(sce, file = paste0("~/HCA/20190319_",
+                           gsub(".RData", "",datasets[k]),"_subsampled10k_seed190806.RData"))
+  }
+
+    #Convert to matrix
+    sce_counts <- as.matrix(counts(sce))
+    #Get parameters from real data: Use individual functions to check errors for each data set:
+    #params <- splatEstimate(sce_counts, params = newSplatParams()) 
+    params = newSplatParams()
+    counts = sce_counts
+    checkmate::assertClass(params, "SplatParams")
+    lib.sizes <- colSums(counts)
+    lib.med <- median(lib.sizes)
+    norm.counts <- t(t(counts)/lib.sizes * lib.med)
+    norm.counts <- norm.counts[rowSums(norm.counts > 0) > 1,]
+    params <- splatter:::splatEstMean(norm.counts, params)
+    if(k != 9)
+    params <- splatter:::splatEstLib(counts, params)
+    params <- splatter:::splatEstOutlier(norm.counts, params)
+    if(k != 8)
+    params <- splatter:::splatEstBCV(counts, params)
+    if(k != 3 & k != 5)
+    {params <- splatter:::splatEstDropout(norm.counts, params)}
+    params <- setParams(params, nGenes = nrow(counts), batchCells = ncol(counts))
+
+    print(paste0("Dataset: ", gsub("_sconeinput.RData", "", datasets[k])))
+    print(params)
+    save(params, file = paste0(outpath, "parameters_",gsub("_sconeinput", "", datasets[k])))
+
+    rm(sce)
+    rm(sce_counts)
+    rm(params)
+    rm(counts)
+    rm(norm.counts)
+}
+```
